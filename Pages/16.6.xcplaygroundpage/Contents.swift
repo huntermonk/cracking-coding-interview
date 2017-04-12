@@ -139,7 +139,99 @@ extension Int {
 //: [Next](@next)
 
 
+//: 16.9 - Implement multiply, subtract and divide for integers. Only use add operator. Answers can just be integers.
 
+extension Int {
+    func subtract(_ amount: Int) -> Int {
+        return self + -amount
+    }
+    
+    func multiply(_ amount: Int) -> Int {
+        guard amount != 0 else { fatalError() }
+        var value = 0
+        for _ in 1...amount {
+            value += self
+        }
+        if amount < 0 {
+            return -value
+        }
+        return value
+    }
+    
+    func divide(_ amount: Int) -> Int {
+        var value = 0
+        var interim = amount
+        while interim <= self {
+            value += 1
+            interim += amount
+        }
+        return value
+    }
+}
+
+(4).multiply(2)
+115.divide(20)
+
+//: 16.10 Given a list of peoples birth and death years, find year with most people alive. It's from 1900 to 2000 inclusive. If a person was alive at all during that year, they count. Someone living from 1908 - 1909 counts for both years.
+
+
+typealias LifeRecord = (born: Int, died: Int)
+let array = [LifeRecord]()
+
+func mostPopulousYear(records: [LifeRecord]) -> Int? {
+    let sorted = records.sorted(by: { $0.0.died < $0.1.died })
+    var mostPopulous: (year: Int, people: Int)?
+    
+    for year in 1900...2000 {
+        var people = 0
+        for person in sorted {
+            if year >= person.born && year <= person.died {
+                people += 1
+            }
+            if let populous = mostPopulous {
+                if people > populous.people {
+                    mostPopulous = (year, people)
+                }
+            } else {
+                mostPopulous = (year, people)
+            }
+            if person.died < year {
+                break
+            }
+        }
+    }
+    return mostPopulous?.year
+}
+
+let people = [(1856, 2004), (1944, 1948), (1948, 1990)]
+
+mostPopulousYear(records: people)
+
+func optimizedMostPopulousYear(people: [LifeRecord], min: Int, max: Int) -> Int {
+    let birthYears = people.map({ $0.born }).sorted()
+    let deathYears = people.map({ $0.died }).sorted()
+    
+    var birthIndex = 0
+    var deathIndex = 0
+    var currentlyAlive = 0
+    var mostPopulous: (year: Int, people: Int) = (0, 0)
+    
+    while birthIndex < birthYears.count {
+        if birthYears[birthIndex] <= deathYears[deathIndex] {
+            currentlyAlive += 1
+            if currentlyAlive > mostPopulous.people {
+                mostPopulous = (birthYears[birthIndex], currentlyAlive)
+            }
+            birthIndex += 1
+        } else if birthYears[birthIndex] > deathYears[deathIndex] {
+            currentlyAlive -= 1
+            deathIndex += 1
+        }
+    }
+    return mostPopulous.year
+}
+
+optimizedMostPopulousYear(people: people, min: 1900, max: 2000)
 
 
 
