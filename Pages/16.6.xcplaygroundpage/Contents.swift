@@ -234,4 +234,26 @@ func optimizedMostPopulousYear(people: [LifeRecord], min: Int, max: Int) -> Int 
 optimizedMostPopulousYear(people: people, min: 1900, max: 2000)
 
 
+//: 16.11 Given two plank lengths and a number of planks you can use, find all possible lengths for a diving board. Diving board has planks end-to-end.
+
+func allLengths(k: Int, shorter: Int, longer: Int) -> Set<Int> {
+    var lengths = Set<Int>()
+    getAllLengths(k: k, total: 0, shorter: shorter, longer: longer, length: &lengths)
+    return lengths
+}
+
+func getAllLengths(k: Int, total: Int, shorter: Int, longer: Int, length: inout Set<Int>) {
+    
+}
+
+func optimizedGetLengths(short: Int, long: Int, boards: Int) -> [Int] {
+    var lengths = [Int]()
+    for index in 0...boards {
+        lengths.append(short * index + (boards - index) * long)
+    }
+    return lengths
+}
+
+let lengths = optimizedGetLengths(short: 3, long: 8, boards: 5)
+
 
